@@ -1,0 +1,85 @@
+body {
+  background-color: #121212;
+  color: #ffffff;
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+header {
+  background-color: #333;
+  color: #fff;
+  text-align: center;
+  padding: 20px;
+  font-size: 2em;
+  font-weight: bold;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.card {
+  background-color: #1e1e1e;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  transition: transform 0.2s;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+}
+
+.card img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+}
+
+.price {
+  font-size: 1.5em;
+  font-weight: bold;
+  padding: 10px;
+  color: #4caf50;
+}
+
+.verified {
+  color: #ffeb3b;
+}
+
+.metadata {
+  display: flex;
+  justify-content: space-around;
+  padding: 10px;
+  font-size: 0.9em;
+}
+
+.card h3 {
+  padding: 0 10px;
+  font-size: 1.1em;
+  margin: 10px 0;
+}
+
+.badge {
+  background-color: #ff5722;
+  color: white;
+  padding: 5px 10px;
+  border-radius: 20px;
+  font-size: 0.8em;
+  display: inline-block;
+  margin: 10px;
+}
+
+footer {
+  text-align: center;
+  padding: 20px;
+  background-color: #1e1e1e;
+  color: #888;
+}
