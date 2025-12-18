@@ -1,6 +1,7 @@
 # PropertyZone Frontend
 
 A modern React-based frontend application for PropertyZone, a platform to browse and view property listings. This app fetches property data from a backend API and displays it in an intuitive card-based layout.
+Live - https://p-zone-frontend.onrender.com/
 
 ## Features
 
