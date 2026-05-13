@@ -1,0 +1,1118 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MERN Stack Roadmap</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Baloo+2:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #080810;
+    --card: #0f0f1e;
+    --border: #1e1e3a;
+    --node: #4ade80;
+    --express: #60a5fa;
+    --mongo: #fb923c;
+    --react: #f472b6;
+    --text: #e2e2f0;
+    --muted: #6b6b8a;
+    --done: #1a2a1a;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Baloo 2', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    padding: 24px 16px 40px;
+  }
+
+  /* HEADER */
+  .header {
+    text-align: center;
+    margin-bottom: 32px;
+    position: relative;
+  }
+
+  .header::before {
+    content: '';
+    position: absolute;
+    top: -20px; left: 50%;
+    transform: translateX(-50%);
+    width: 300px; height: 300px;
+    background: radial-gradient(circle, rgba(74,222,128,0.06) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .badge {
+    display: inline-block;
+    background: #0f2a1a;
+    border: 1px solid var(--node);
+    color: var(--node);
+    font-size: 0.7rem;
+    font-family: 'JetBrains Mono', monospace;
+    padding: 4px 14px;
+    border-radius: 20px;
+    margin-bottom: 12px;
+    letter-spacing: 1px;
+  }
+
+  .header h1 {
+    font-size: 2rem;
+    font-weight: 800;
+    line-height: 1.2;
+    margin-bottom: 8px;
+  }
+
+  .header h1 span { color: var(--node); }
+
+  .header p {
+    color: var(--muted);
+    font-size: 0.85rem;
+  }
+
+  /* STATS */
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    margin-bottom: 28px;
+  }
+
+  .stat {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 12px 8px;
+    text-align: center;
+  }
+
+  .stat .n { font-size: 1.5rem; font-weight: 800; }
+  .stat .l { font-size: 0.65rem; color: var(--muted); margin-top: 2px; }
+
+  /* PHASE HEADER */
+  .phase {
+    margin-bottom: 24px;
+  }
+
+  .phase-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 14px;
+    padding: 12px 18px;
+    border-radius: 14px;
+    font-weight: 800;
+    font-size: 1rem;
+    border-left: 4px solid;
+  }
+
+  .phase-node   { background: #0a1f0f; border-color: var(--node);    color: var(--node); }
+  .phase-express{ background: #0a1020; border-color: var(--express);  color: var(--express); }
+  .phase-mongo  { background: #1f1000; border-color: var(--mongo);   color: var(--mongo); }
+  .phase-react  { background: #1f0a15; border-color: var(--react);   color: var(--react); }
+  .phase-project{ background: #1a0a1f; border-color: #c084fc;        color: #c084fc; }
+
+  /* WEEK CARD */
+  .week-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    margin-bottom: 14px;
+    overflow: hidden;
+  }
+
+  .week-header {
+    padding: 12px 18px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--border);
+    cursor: pointer;
+    user-select: none;
+  }
+
+  .week-header .wl {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 800;
+    font-size: 0.9rem;
+  }
+
+  .week-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-weight: 700;
+  }
+
+  .wn-node    { background: #0a2a10; color: var(--node); }
+  .wn-express { background: #0a1530; color: var(--express); }
+  .wn-mongo   { background: #2a1500; color: var(--mongo); }
+  .wn-react   { background: #2a0a15; color: var(--react); }
+  .wn-project { background: #1a0a2a; color: #c084fc; }
+
+  .week-dates { font-size: 0.72rem; color: var(--muted); font-family: 'JetBrains Mono', monospace; }
+
+  .toggle-icon { font-size: 0.8rem; color: var(--muted); transition: transform 0.3s; }
+  .week-card.open .toggle-icon { transform: rotate(180deg); }
+
+  .week-body { display: none; padding: 14px 18px; }
+  .week-card.open .week-body { display: block; }
+
+  /* DAY */
+  .day-block {
+    margin-bottom: 16px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--border);
+  }
+  .day-block:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+
+  .day-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.72rem;
+    color: var(--muted);
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .day-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  .session {
+    margin-bottom: 10px;
+  }
+
+  .session-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 6px;
+  }
+
+  .session-time {
+    font-size: 0.68rem;
+    font-family: 'JetBrains Mono', monospace;
+    color: var(--muted);
+    min-width: 90px;
+  }
+
+  .session-type {
+    font-size: 0.65rem;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-weight: 700;
+  }
+
+  .st-theory   { background: #0a1530; color: var(--express); }
+  .st-practice { background: #0a2010; color: var(--node); }
+  .st-project  { background: #1a0a2a; color: #c084fc; }
+  .st-revision { background: #1a1000; color: var(--mongo); }
+
+  .topics { padding-left: 4px; }
+
+  .topic-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 5px 0;
+    font-size: 0.82rem;
+    line-height: 1.5;
+    border-bottom: 1px dashed #141428;
+    cursor: pointer;
+  }
+
+  .topic-item:last-child { border-bottom: none; }
+
+  .topic-item input[type="checkbox"] {
+    margin-top: 3px;
+    accent-color: var(--node);
+    min-width: 14px;
+    cursor: pointer;
+  }
+
+  .topic-item label {
+    cursor: pointer;
+    flex: 1;
+  }
+
+  .topic-item.checked label {
+    text-decoration: line-through;
+    color: var(--muted);
+  }
+
+  /* RESOURCE */
+  .resource-box {
+    margin-top: 12px;
+    background: #080818;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 12px 14px;
+  }
+
+  .resource-box .r-title {
+    font-size: 0.7rem;
+    color: var(--muted);
+    font-family: 'JetBrains Mono', monospace;
+    margin-bottom: 8px;
+    letter-spacing: 0.5px;
+  }
+
+  .resource-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 5px 0;
+    font-size: 0.78rem;
+    border-bottom: 1px dashed #141428;
+  }
+
+  .resource-item:last-child { border-bottom: none; }
+  .resource-item .ri { font-size: 0.9rem; }
+  .resource-item a { color: #60a5fa; text-decoration: none; }
+  .resource-item a:hover { text-decoration: underline; }
+  .free-badge { font-size: 0.6rem; background: #0a2010; color: var(--node); padding: 1px 6px; border-radius: 8px; font-weight: 700; }
+
+  /* PROJECT CARD */
+  .project-card {
+    background: #100a1f;
+    border: 1px solid #2a1a40;
+    border-radius: 12px;
+    padding: 14px;
+    margin-bottom: 10px;
+  }
+
+  .project-card .p-name {
+    font-weight: 800;
+    color: #c084fc;
+    margin-bottom: 4px;
+    font-size: 0.9rem;
+  }
+
+  .project-card .p-desc {
+    font-size: 0.78rem;
+    color: var(--muted);
+    line-height: 1.5;
+  }
+
+  .project-card .p-tech {
+    margin-top: 8px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .p-tag {
+    font-size: 0.62rem;
+    padding: 2px 8px;
+    border-radius: 8px;
+    font-weight: 700;
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  /* PROGRESS */
+  .progress-section {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 18px;
+    margin-bottom: 24px;
+  }
+
+  .progress-section h3 {
+    font-size: 0.85rem;
+    color: var(--muted);
+    margin-bottom: 14px;
+    font-family: 'JetBrains Mono', monospace;
+    letter-spacing: 0.5px;
+  }
+
+  .prog-bar-wrap {
+    margin-bottom: 10px;
+  }
+
+  .prog-label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.72rem;
+    margin-bottom: 5px;
+  }
+
+  .prog-bar {
+    height: 6px;
+    background: var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+
+  .prog-fill {
+    height: 100%;
+    border-radius: 10px;
+    transition: width 0.5s ease;
+  }
+
+  /* TIPS */
+  .tips {
+    background: #080818;
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 18px;
+    margin-bottom: 16px;
+  }
+
+  .tips h3 { font-size: 0.9rem; color: var(--node); margin-bottom: 12px; }
+
+  .tip-item {
+    display: flex;
+    gap: 10px;
+    padding: 8px 0;
+    font-size: 0.8rem;
+    border-bottom: 1px dashed var(--border);
+    line-height: 1.5;
+  }
+
+  .tip-item:last-child { border-bottom: none; }
+
+  footer {
+    text-align: center;
+    color: var(--muted);
+    font-size: 0.75rem;
+    margin-top: 20px;
+    font-family: 'JetBrains Mono', monospace;
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="badge">// MERN STACK ROADMAP — JUNIOR LEVEL</div>
+  <h1>Zero to <span>Junior Developer</span><br>in 7 Weeks</h1>
+  <p>Node.js → Express → MongoDB → React • 4 Hours/Day • June End Tak</p>
+</div>
+
+<div class="stats">
+  <div class="stat"><div class="n" style="color:#4ade80">7</div><div class="l">Weeks</div></div>
+  <div class="stat"><div class="n" style="color:#60a5fa">4h</div><div class="l">Per Day</div></div>
+  <div class="stat"><div class="n" style="color:#f472b6">3+</div><div class="l">Projects</div></div>
+  <div class="stat"><div class="n" style="color:#fb923c">100%</div><div class="l">Free Resources</div></div>
+</div>
+
+<!-- PROGRESS -->
+<div class="progress-section">
+  <h3>// OVERALL PROGRESS</h3>
+  <div class="prog-bar-wrap">
+    <div class="prog-label"><span style="color:#4ade80">Node.js</span><span id="node-pct">0%</span></div>
+    <div class="prog-bar"><div class="prog-fill" id="node-bar" style="width:0%;background:#4ade80"></div></div>
+  </div>
+  <div class="prog-bar-wrap">
+    <div class="prog-label"><span style="color:#60a5fa">Express.js</span><span id="express-pct">0%</span></div>
+    <div class="prog-bar"><div class="prog-fill" id="express-bar" style="width:0%;background:#60a5fa"></div></div>
+  </div>
+  <div class="prog-bar-wrap">
+    <div class="prog-label"><span style="color:#fb923c">MongoDB</span><span id="mongo-pct">0%</span></div>
+    <div class="prog-bar"><div class="prog-fill" id="mongo-bar" style="width:0%;background:#fb923c"></div></div>
+  </div>
+  <div class="prog-bar-wrap">
+    <div class="prog-label"><span style="color:#f472b6">React.js</span><span id="react-pct">0%</span></div>
+    <div class="prog-bar"><div class="prog-fill" id="react-bar" style="width:0%;background:#f472b6"></div></div>
+  </div>
+</div>
+
+<!-- ===== PHASE 1: NODE.JS ===== -->
+<div class="phase">
+  <div class="phase-title phase-node">🟢 Phase 1 — Node.js (Week 1 & 2)</div>
+
+  <!-- WEEK 1 -->
+  <div class="week-card open" id="week1">
+    <div class="week-header" onclick="toggleWeek('week1')">
+      <div class="wl">
+        <span class="week-num wn-node">WEEK 01</span>
+        Node.js Fundamentals
+      </div>
+      <div style="display:flex;align-items:center;gap:12px">
+        <span class="week-dates">12 May – 18 May</span>
+        <span class="toggle-icon">▼</span>
+      </div>
+    </div>
+    <div class="week-body">
+
+      <div class="day-block">
+        <div class="day-label">DAY 1 — Monday, 12 May</div>
+        <div class="session">
+          <div class="session-header">
+            <span class="session-time">8:00 – 10:00 AM</span>
+            <span class="session-type st-theory">📖 Theory</span>
+          </div>
+          <div class="topics">
+            <div class="topic-item" onclick="toggleCheck(this)"><input type="checkbox"> <label>Node.js kya hai? Browser JS vs Node JS difference</label></div>
+            <div class="topic-item" onclick="toggleCheck(this)"><input type="checkbox"> <label>Node.js install karo + version check (node -v, npm -v)</label></div>
+            <div class="topic-item" onclick="toggleCheck(this)"><input type="checkbox"> <label>REPL samjho — Node terminal mein code chalao</label></div>
+            <div class="topic-item" onclick="toggleCheck(this)"><input type="checkbox"> <label>First Node file banao — hello.js chalao terminal se</label></div>
+            <div class="topic-item" onclick="toggleCheck(this)"><input type="checkbox"> <label>Global objects — __dirname, __filename, process</label></div>
+          </div>
+        </div>
+        <div class="session">
+          <div class="session-header">
+            <span class="session-time">7:30 – 9:30 PM</span>
+            <span class="session-type st-practice">💻 Practice</span>
+          </div>
+          <div class="topics">
+            <div class="topic-item" onclick="toggleCheck(this)"><input type="checkbox"> <label>5 alag alag JS files banao Node se chalao</label></div>
+            <div class="topic-item" onclick="toggleCheck(this)"><input type="checkbox"> <label>process.argv se command line arguments lo</label></div>
+            <div class="topic-item" onclick="toggleCheck(this)"><input type="checkbox"> <label>Calculator banao — node calc.js 5 + 3 output aaye</label></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="day-block">
+        <div class="day-label">DAY 2 — Tuesday, 13 May</div>
+        <div class="session">
+          <div class="session-header">
+            <span class="session-time">8:00 – 10:00 AM</span>
+            <span class="session-type st-theory">📖 Theory</span>
+          </div>
+          <div class="topics">
+            <div class="topic-item" onclick="toggleCheck(this)"><input type="checkbox"> <label>Modules kya hote hain — CommonJS (require/module.exports)</label></div>
+            <div class="topic-item" onclick="toggleCheck(this)"><input type="checkbox"> <label>Built-in modules — path, os, fs (intro)</label></div>
+            <div class="topic-item" onclick="toggleCheck(this)"><input type="checkbox"> <label>Apna module banao aur doosri file mein use karo</label></div>
+            <div class="topic-item" onclick="toggleCheck(this)"><input type="checkbox"> <label>NPM kya hai — package.json samjho</label></div>
+          </div>
+        </div>
+        <div class="session">
+          <div class="session-header">
+            <span class="session-time">7:30 – 9:30 PM</span>
+            <span class="session-type st-practice">💻 Practice</span>
+          </div>
+          <div class="topics">
+            <div class="topic-item" onclick="toggleCheck(this)"><input type="checkbox"> <label>math.js module banao — add, subtract, multiply functions</label></div>
+            <div class="topic-item" onclick="toggleCheck(this)"><input type="checkbox"> <label>npm init karke package.json banao</label></div>
+            <div class="topic-item" onclick="toggleCheck(this)"><input type="checkbox"> <label>lodash install karo npm se aur use karo</label></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="day-block">
+        <div class="day-label">DAY 3 — Wednesday, 14 May</div>
+        <div class="session">
+          <div class="session-header">
+            <span class="session-time">8:00 – 10:00 AM</span>
+            <span class="session-type st-theory">📖 Theory</span>
+          </div>
+          <div class="topics">
+            <div class="topic-item" onclick="toggleCheck(this)"><input type="checkbox"> <label>File System (fs) module — readFile, writeFile, appendFile</label></div>
+            <div class="topic-item" onclick="toggleCheck(this)"><input type="checkbox"> <label>Synchronous vs Asynchronous — fark samjho</label></div>
+            <div class="topic-item" onclick="toggleCheck(this)"><input type="checkbox"> <label>Callback functions — Node mein kaise kaam karti hain</label></div>
+            <div class="topic-item" onclick="toggleCheck(this)"><input type="checkbox"> <label>fs.promises — async/await ke saath file operations</label></div>
+          </div>
+        </div>
+        <div class="session">
+          <div class="session-header">
+            <span class="session-time">7:30 – 9:30 PM</span>
+            <span class="session-type st-practice">💻 Practice</span>
+          </div>
+          <div class="topics">
+            <div class="topic-item" onclick="toggleCheck(this)"><input type="checkbox"> <label>notes.txt file banao, usme likho, padho, update karo</label></div>
+            <div class="topic-item" onclick="toggleCheck(this)"><input type="checkbox"> <label>Directory banao, files list karo fs se</label></div>
+            <div class="topic-item" onclick="toggleCheck(this)"><input type="checkbox"> <label>Mini Note App — CLI se note add/read/delete karo</label></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="day-block">
+        <div class="day-label">DAY 4 — Thursday, 15 May</div>
+        <div class="session">
+          <div class="session-header">
+            <span class="session-time">8:00 – 10:00 AM</span>
+            <span class="session-type st-theory">📖 Theory</span>
+          </div>
+          <div class="topics">
+            <div class="topic-item" onclick="toggleCheck(this)"><input type="checkbox"> <label>Event Loop kya hai — bilkul seedha samjho</label></div>
+            <div class="topic-item" onclick="toggleCheck(this)"><input type="checkbox"> <label>EventEmitter — apna custom event banao</label></div>
+            <div class="topic-item" onclick="toggleCheck(this)"><input type="checkbox"> <label>Streams — readable, writable streams intro</label></div>
+            <div class="topic-item" onclick="toggleCheck(this)"><input type="checkbox"> <label>Buffers — kya hota hai, kab use hota hai</label></div>
+          </div>
+        </div>
+        <div class="session">
+          <div class="session-header">
+            <span class="session-time">7:30 – 9:30 PM</span>
+            <span class="session-type st-practice">💻 Practice</span>
+          </div>
+          <div class="topics">
+            <div class="topic-item" onclick="toggleCheck(this)"><input type="checkbox"> <label>Custom EventEmitter banao — login/logout events</label></div>
+            <div class="topic-item" onclick="toggleCheck(this)"><input type="checkbox"> <label>Stream se badi file copy karo</label></div>
+            <div class="topic-item" onclick="toggleCheck(this)"><input type="checkbox"> <label>setTimeout, setInterval, setImmediate experiment karo</label></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="day-block">
+        <div class="day-label">DAY 5 — Friday, 16 May</div>
+        <div class="session">
+          <div class="session-header">
+            <span class="session-time">8:00 – 10:00 AM</span>
+            <span class="session-type st-theory">📖 Theory</span>
+          </div>
+          <div class="topics">
+            <div class="topic-item" onclick="toggleCheck(this)"><input type="checkbox"> <label>HTTP module — server kaise banta hai Node mein</label></div>
+            <div class="topic-item" onclick="toggleCheck(this)"><input type="checkbox"> <label>Request aur Response object samjho</label></div>
+            <div class="topic-item" onclick="toggleCheck(this)"><input type="checkbox"> <label>Status codes — 200, 201, 400, 404, 500</label></div>
+            <div class="topic-item" onclick="toggleCheck(this)"><input type="checkbox"> <label>JSON response bhejno — res.setHeader + JSON.stringify</label></div>
+          </div>
+        </div>
+        <div class="session">
+          <div class="session-header">
+            <span class="session-time">7:30 – 9:30 PM</span>
+            <span class="session-type st-practice">💻 Practice</span>
+          </div>
+          <div class="topics">
+            <div class="topic-item" onclick="toggleCheck(this)"><input type="checkbox"> <label>Pure Node HTTP server banao port 3000 pe</label></div>
+            <div class="topic-item" onclick="toggleCheck(this)"><input type="checkbox"> <label>3 routes banao — /, /about, /contact</label></div>
+            <div class="topic-item" onclick="toggleCheck(this)"><input type="checkbox"> <label>JSON data return karo /api/users route se</label></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="day-block">
+        <div class="day-label">DAY 6 — Saturday, 17 May</div>
+        <div class="session">
+          <div class="session-header">
+            <span class="session-time">8:00 – 12:00 PM</span>
+            <span class="session-type st-project">🛠️ Project</span>
+          </div>
+          <div class="topics">
+            <div class="topic-item" onclick="toggleCheck(this)"><input type="checkbox"> <label>PROJECT: CLI Task Manager — tasks.json mein save ho</label></div>
+            <div class="topic-item" onclick="toggleCheck(this)"><input type="checkbox"> <label>node tasks.js add "Padhai karo" — task add ho</label></div>
+            <div class="topic-item" onclick="toggleCheck(this)"><input type="checkbox"> <label>node tasks.js list — sari tasks dikhao</label></div>
+            <div class="topic-item" onclick="toggleCheck(this)"><input type="checkbox"> <label>node tasks.js done 1 — task complete mark karo</label></div>
+            <div class="topic-item" onclick="toggleCheck(this)"><input type="checkbox"> <label>node tasks.js delete 1 — task delete karo</label></div>
+            <div class="topic-item" onclick="toggleCheck(this)"><input type="checkbox"> <label>GitHub pe push karo — README likho</label></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="day-block">
+        <div class="day-label">DAY 7 — Sunday, 18 May</div>
+        <div class="session">
+          <div class="session-header">
+            <span class="session-time">8:00 – 12:00 PM</span>
+            <span class="session-type st-revision">🔄 Revision</span>
+          </div>
+          <div class="topics">
+            <div class="topic-item" onclick="toggleCheck(this)"><input type="checkbox"> <label>Week 1 ka poora revision — notes banao haath se</label></div>
+            <div class="topic-item" onclick="toggleCheck(this)"><input type="checkbox"> <label>Modules, fs, http — bina dekhe ek baar aur likho</label></div>
+            <div class="topic-item" onclick="toggleCheck(this)"><input type="checkbox"> <label>Project mein koi feature add karo</label></div>
+            <div class="topic-item" onclick="toggleCheck(this)"><input type="checkbox"> <label>Next week ka plan padho — Express ready karo dimaag mein</label></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="resource-box">
+        <div class="r-title">// RESOURCES — WEEK 1</div>
+        <div class="resource-item"><span class="ri">▶️</span><div><a href="https://youtube.com/@CodeWithHarry" target="_blank">Code With Harry — Node.js Tutorial</a> <span class="free-badge">FREE</span></div></div>
+        <div class="resource-item"><span class="ri">▶️</span><div><a href="https://youtube.com/@thapaTechnical" target="_blank">Thapa Technical — Node.js</a> <span class="free-badge">FREE</span></div></div>
+        <div class="resource-item"><span class="ri">📄</span><div><a href="https://nodejs.org/en/docs" target="_blank">Official Node.js Docs</a> <span class="free-badge">FREE</span></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- WEEK 2 -->
+  <div class="week-card" id="week2">
+    <div class="week-header" onclick="toggleWeek('week2')">
+      <div class="wl">
+        <span class="week-num wn-node">WEEK 02</span>
+        Node.js Advanced + NPM Ecosystem
+      </div>
+      <div style="display:flex;align-items:center;gap:12px">
+        <span class="week-dates">19 May – 25 May</span>
+        <span class="toggle-icon">▼</span>
+      </div>
+    </div>
+    <div class="week-body">
+      <div class="day-block">
+        <div class="day-label">DAY 8–9 — Mon–Tue</div>
+        <div class="session">
+          <div class="session-header"><span class="session-time">Daily 4h</span><span class="session-type st-theory">📖 Theory + Practice</span></div>
+          <div class="topics">
+            <div class="topic-item" onclick="toggleCheck(this)"><input type="checkbox"> <label>Promise, async/await deep dive Node context mein</label></div>
+            <div class="topic-item" onclick="toggleCheck(this)"><input type="checkbox"> <label>Error handling — try/catch, custom Error classes</label></div>
+            <div class="topic-item" onclick="toggleCheck(this)"><input type="checkbox"> <label>nodemon install karo — auto restart server</label></div>
+            <div class="topic-item" onclick="toggleCheck(this)"><input type="checkbox"> <label>dotenv — environment variables (.env file)</label></div>
+            <div class="topic-item" onclick="toggleCheck(this)"><input type="checkbox"> <label>.gitignore mein node_modules aur .env daalo</label></div>
+          </div>
+        </div>
+      </div>
+      <div class="day-block">
+        <div class="day-label">DAY 10–11 — Wed–Thu</div>
+        <div class="session">
+          <div class="session-header"><span class="session-time">Daily 4h</span><span class="session-type st-theory">📖 Theory + Practice</span></div>
+          <div class="topics">
+            <div class="topic-item" onclick="toggleCheck(this)"><input type="checkbox"> <label>HTTP methods — GET, POST, PUT, DELETE kya hain</label></div>
+            <div class="topic-item" onclick="toggleCheck(this)"><input type="checkbox"> <label>REST API concept — kya hoti hai, kaise design karein</label></div>
+            <div class="topic-item" onclick="toggleCheck(this)"><input type="checkbox"> <label>Postman install karo — API test karna seekho</label></div>
+            <div class="topic-item" onclick="toggleCheck(this)"><input type="checkbox"> <label>Pure Node se GET aur POST handle karo</label></div>
+          </div>
+        </div>
+      </div>
+      <div class="day-block">
+        <div class="day-label">DAY 12–13 — Fri–Sat</div>
+        <div class="session">
+          <div class="session-header"><span class="session-time">Daily 4h</span><span class="session-type st-practice">💻 Practice</span></div>
+          <div class="topics">
+            <div class="topic-item" onclick="toggleCheck(this)"><input type="checkbox"> <label>URL parsing — query strings, params samjho</label></div>
+            <div class="topic-item" onclick="toggleCheck(this)"><input type="checkbox"> <label>JSON body parse karo POST request mein</label></div>
+            <div class="topic-item" onclick="toggleCheck(this)"><input type="checkbox"> <label>PROJECT: Pure Node REST API — Users CRUD (in-memory array)</label></div>
+            <div class="topic-item" onclick="toggleCheck(this)"><input type="checkbox"> <label>GET /users, POST /users, DELETE /users/:id — Postman se test karo</label></div>
+          </div>
+        </div>
+      </div>
+      <div class="day-block">
+        <div class="day-label">DAY 14 — Sunday</div>
+        <div class="session">
+          <div class="session-header"><span class="session-time">4h</span><span class="session-type st-revision">🔄 Revision</span></div>
+          <div class="topics">
+            <div class="topic-item" onclick="toggleCheck(this)"><input type="checkbox"> <label>Node.js complete revision — poora concept clear karo</label></div>
+            <div class="topic-item" onclick="toggleCheck(this)"><input type="checkbox"> <label>GitHub pe dono projects push karo</label></div>
+            <div class="topic-item" onclick="toggleCheck(this)"><input type="checkbox"> <label>Express.js kya hai — kal se shuru hoga, intro padho</label></div>
+          </div>
+        </div>
+      </div>
+      <div class="resource-box">
+        <div class="r-title">// RESOURCES — WEEK 2</div>
+        <div class="resource-item"><span class="ri">▶️</span><div><a href="https://youtube.com/@CodeWithHarry" target="_blank">Code With Harry — Node Advanced</a> <span class="free-badge">FREE</span></div></div>
+        <div class="resource-item"><span class="ri">🔧</span><div><a href="https://www.postman.com" target="_blank">Postman — API Testing Tool</a> <span class="free-badge">FREE</span></div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== PHASE 2: EXPRESS.JS ===== -->
+<div class="phase">
+  <div class="phase-title phase-express">🔵 Phase 2 — Express.js (Week 3)</div>
+
+  <div class="week-card" id="week3">
+    <div class="week-header" onclick="toggleWeek('week3')">
+      <div class="wl">
+        <span class="week-num wn-express">WEEK 03</span>
+        Express.js — REST APIs + Auth
+      </div>
+      <div style="display:flex;align-items:center;gap:12px">
+        <span class="week-dates">26 May – 1 Jun</span>
+        <span class="toggle-icon">▼</span>
+      </div>
+    </div>
+    <div class="week-body">
+      <div class="day-block">
+        <div class="day-label">DAY 15–16 — Mon–Tue</div>
+        <div class="session">
+          <div class="session-header"><span class="session-time">Daily 4h</span><span class="session-type st-theory">📖 Theory + Practice</span></div>
+          <div class="topics">
+            <div class="topic-item" onclick="toggleCheck(this)"><input type="checkbox"> <label>Express install — npm install express</label></div>
+            <div class="topic-item" onclick="toggleCheck(this)"><input type="checkbox"> <label>Express app banao — app.get, app.post, app.listen</label></div>
+            <div class="topic-item" onclick="toggleCheck(this)"><input type="checkbox"> <label>Route parameters — /users/:id</label></div>
+            <div class="topic-item" onclick="toggleCheck(this)"><input type="checkbox"> <label>Query strings — /search?name=rahul</label></div>
+            <div class="topic-item" onclick="toggleCheck(this)"><input type="checkbox"> <label>express.json() middleware — body parse karo</label></div>
+            <div class="topic-item" onclick="toggleCheck(this)"><input type="checkbox"> <label>Express Router — routes alag file mein rakho</label></div>
+          </div>
+        </div>
+      </div>
+      <div class="day-block">
+        <div class="day-label">DAY 17–18 — Wed–Thu</div>
+        <div class="session">
+          <div class="session-header"><span class="session-time">Daily 4h</span><span class="session-type st-theory">📖 Theory + Practice</span></div>
+          <div class="topics">
+            <div class="topic-item" onclick="toggleCheck(this)"><input type="checkbox"> <label>Middleware kya hota hai — next() samjho</label></div>
+            <div class="topic-item" onclick="toggleCheck(this)"><input type="checkbox"> <label>Custom middleware banao — logger, auth check</label></div>
+            <div class="topic-item" onclick="toggleCheck(this)"><input type="checkbox"> <label>Error handling middleware — 4 arguments wala</label></div>
+            <div class="topic-item" onclick="toggleCheck(this)"><input type="checkbox"> <label>CORS — cors package install karo</label></div>
+            <div class="topic-item" onclick="toggleCheck(this)"><input type="checkbox"> <label>bcrypt — password hash karna seekho</label></div>
+          </div>
+        </div>
+      </div>
+      <div class="day-block">
+        <div class="day-label">DAY 19–20 — Fri–Sat</div>
+        <div class="session">
+          <div class="session-header"><span class="session-time">Daily 4h</span><span class="session-type st-practice">💻 Practice + Project</span></div>
+          <div class="topics">
+            <div class="topic-item" onclick="toggleCheck(this)"><input type="checkbox"> <label>JWT — jsonwebtoken package, token banana aur verify karna</label></div>
+            <div class="topic-item" onclick="toggleCheck(this)"><input type="checkbox"> <label>Auth middleware banao — token check kare har protected route pe</label></div>
+            <div class="topic-item" onclick="toggleCheck(this)"><input type="checkbox"> <label>PROJECT: Auth API — Register, Login, Protected Route</label></div>
+            <div class="topic-item" onclick="toggleCheck(this)"><input type="checkbox"> <label>Postman se poora flow test karo</label></div>
+            <div class="topic-item" onclick="toggleCheck(this)"><input type="checkbox"> <label>GitHub pe push karo</label></div>
+          </div>
+        </div>
+      </div>
+      <div class="day-block">
+        <div class="day-label">DAY 21 — Sunday</div>
+        <div class="session">
+          <div class="session-header"><span class="session-time">4h</span><span class="session-type st-revision">🔄 Revision</span></div>
+          <div class="topics">
+            <div class="topic-item" onclick="toggleCheck(this)"><input type="checkbox"> <label>Express poora revise karo — middleware, routing, auth</label></div>
+            <div class="topic-item" onclick="toggleCheck(this)"><input type="checkbox"> <label>MongoDB intro padho — kal se shuru hoga</label></div>
+          </div>
+        </div>
+      </div>
+      <div class="resource-box">
+        <div class="r-title">// RESOURCES — WEEK 3</div>
+        <div class="resource-item"><span class="ri">▶️</span><div><a href="https://youtube.com/@CodeWithHarry" target="_blank">Code With Harry — Express.js</a> <span class="free-badge">FREE</span></div></div>
+        <div class="resource-item"><span class="ri">📄</span><div><a href="https://expressjs.com" target="_blank">Express.js Official Docs</a> <span class="free-badge">FREE</span></div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== PHASE 3: MONGODB ===== -->
+<div class="phase">
+  <div class="phase-title phase-mongo">🟠 Phase 3 — MongoDB (Week 4)</div>
+
+  <div class="week-card" id="week4">
+    <div class="week-header" onclick="toggleWeek('week4')">
+      <div class="wl">
+        <span class="week-num wn-mongo">WEEK 04</span>
+        MongoDB + Mongoose + Full Backend
+      </div>
+      <div style="display:flex;align-items:center;gap:12px">
+        <span class="week-dates">2 Jun – 8 Jun</span>
+        <span class="toggle-icon">▼</span>
+      </div>
+    </div>
+    <div class="week-body">
+      <div class="day-block">
+        <div class="day-label">DAY 22–23 — Mon–Tue</div>
+        <div class="session">
+          <div class="session-header"><span class="session-time">Daily 4h</span><span class="session-type st-theory">📖 Theory + Practice</span></div>
+          <div class="topics">
+            <div class="topic-item" onclick="toggleCheck(this)"><input type="checkbox"> <label>MongoDB kya hai — SQL vs NoSQL fark samjho</label></div>
+            <div class="topic-item" onclick="toggleCheck(this)"><input type="checkbox"> <label>MongoDB Atlas — free cloud database setup karo</label></div>
+            <div class="topic-item" onclick="toggleCheck(this)"><input type="checkbox"> <label>Compass install karo — GUI se data dekho</label></div>
+            <div class="topic-item" onclick="toggleCheck(this)"><input type="checkbox"> <label>Collections, Documents, Fields — concept clear karo</label></div>
+            <div class="topic-item" onclick="toggleCheck(this)"><input type="checkbox"> <label>Basic queries — insertOne, find, findOne, updateOne, deleteOne</label></div>
+          </div>
+        </div>
+      </div>
+      <div class="day-block">
+        <div class="day-label">DAY 24–25 — Wed–Thu</div>
+        <div class="session">
+          <div class="session-header"><span class="session-time">Daily 4h</span><span class="session-type st-theory">📖 Theory + Practice</span></div>
+          <div class="topics">
+            <div class="topic-item" onclick="toggleCheck(this)"><input type="checkbox"> <label>Mongoose install — mongoose.connect()</label></div>
+            <div class="topic-item" onclick="toggleCheck(this)"><input type="checkbox"> <label>Schema banao — types, required, default, unique</label></div>
+            <div class="topic-item" onclick="toggleCheck(this)"><input type="checkbox"> <label>Model banao — mongoose.model()</label></div>
+            <div class="topic-item" onclick="toggleCheck(this)"><input type="checkbox"> <label>CRUD with Mongoose — save, find, findById, findByIdAndUpdate, findByIdAndDelete</label></div>
+            <div class="topic-item" onclick="toggleCheck(this)"><input type="checkbox"> <label>Validation — mongoose validators</label></div>
+          </div>
+        </div>
+      </div>
+      <div class="day-block">
+        <div class="day-label">DAY 26–27 — Fri–Sat</div>
+        <div class="session">
+          <div class="session-header"><span class="session-time">Daily 4h</span><span class="session-type st-project">🛠️ Project</span></div>
+          <div class="topics">
+            <div class="topic-item" onclick="toggleCheck(this)"><input type="checkbox"> <label>Express Auth API mein MongoDB connect karo</label></div>
+            <div class="topic-item" onclick="toggleCheck(this)"><input type="checkbox"> <label>User Schema banao — name, email, password, createdAt</label></div>
+            <div class="topic-item" onclick="toggleCheck(this)"><input type="checkbox"> <label>Register mein DB mein save karo, Login mein find karo</label></div>
+            <div class="topic-item" onclick="toggleCheck(this)"><input type="checkbox"> <label>Populate — ek document doosre se relate karo</label></div>
+            <div class="topic-item" onclick="toggleCheck(this)"><input type="checkbox"> <label>Poora backend ready — Node + Express + MongoDB + JWT</label></div>
+          </div>
+        </div>
+      </div>
+      <div class="day-block">
+        <div class="day-label">DAY 28 — Sunday</div>
+        <div class="session">
+          <div class="session-header"><span class="session-time">4h</span><span class="session-type st-revision">🔄 Revision + Deploy</span></div>
+          <div class="topics">
+            <div class="topic-item" onclick="toggleCheck(this)"><input type="checkbox"> <label>Backend ko Render.com pe deploy karo — FREE hosting</label></div>
+            <div class="topic-item" onclick="toggleCheck(this)"><input type="checkbox"> <label>Environment variables Render mein set karo</label></div>
+            <div class="topic-item" onclick="toggleCheck(this)"><input type="checkbox"> <label>Postman se live API test karo</label></div>
+          </div>
+        </div>
+      </div>
+      <div class="resource-box">
+        <div class="r-title">// RESOURCES — WEEK 4</div>
+        <div class="resource-item"><span class="ri">▶️</span><div><a href="https://youtube.com/@CodeWithHarry" target="_blank">Code With Harry — MongoDB + Mongoose</a> <span class="free-badge">FREE</span></div></div>
+        <div class="resource-item"><span class="ri">🌐</span><div><a href="https://cloud.mongodb.com" target="_blank">MongoDB Atlas — Free Cloud DB</a> <span class="free-badge">FREE</span></div></div>
+        <div class="resource-item"><span class="ri">🚀</span><div><a href="https://render.com" target="_blank">Render.com — Free Backend Hosting</a> <span class="free-badge">FREE</span></div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== PHASE 4: REACT ===== -->
+<div class="phase">
+  <div class="phase-title phase-react">🩷 Phase 4 — React.js (Week 5 & 6)</div>
+
+  <div class="week-card" id="week5">
+    <div class="week-header" onclick="toggleWeek('week5')">
+      <div class="wl">
+        <span class="week-num wn-react">WEEK 05</span>
+        React.js Fundamentals
+      </div>
+      <div style="display:flex;align-items:center;gap:12px">
+        <span class="week-dates">9 Jun – 15 Jun</span>
+        <span class="toggle-icon">▼</span>
+      </div>
+    </div>
+    <div class="week-body">
+      <div class="day-block">
+        <div class="day-label">DAY 29–30 — Mon–Tue</div>
+        <div class="session">
+          <div class="session-header"><span class="session-time">Daily 4h</span><span class="session-type st-theory">📖 Theory + Practice</span></div>
+          <div class="topics">
+            <div class="topic-item" onclick="toggleCheck(this)"><input type="checkbox"> <label>React kya hai — Virtual DOM concept</label></div>
+            <div class="topic-item" onclick="toggleCheck(this)"><input type="checkbox"> <label>Vite se React app banao — npm create vite@latest</label></div>
+            <div class="topic-item" onclick="toggleCheck(this)"><input type="checkbox"> <label>JSX — JavaScript mein HTML likhna</label></div>
+            <div class="topic-item" onclick="toggleCheck(this)"><input type="checkbox"> <label>Components — functional components banao</label></div>
+            <div class="topic-item" onclick="toggleCheck(this)"><input type="checkbox"> <label>Props — parent se child mein data bhejo</label></div>
+            <div class="topic-item" onclick="toggleCheck(this)"><input type="checkbox"> <label>Conditional rendering — ternary, && operator</label></div>
+          </div>
+        </div>
+      </div>
+      <div class="day-block">
+        <div class="day-label">DAY 31–32 — Wed–Thu</div>
+        <div class="session">
+          <div class="session-header"><span class="session-time">Daily 4h</span><span class="session-type st-theory">📖 Theory + Practice</span></div>
+          <div class="topics">
+            <div class="topic-item" onclick="toggleCheck(this)"><input type="checkbox"> <label>useState hook — state kaise kaam karta hai</label></div>
+            <div class="topic-item" onclick="toggleCheck(this)"><input type="checkbox"> <label>useEffect hook — side effects, API calls</label></div>
+            <div class="topic-item" onclick="toggleCheck(this)"><input type="checkbox"> <label>Lists render karo — .map() with key prop</label></div>
+            <div class="topic-item" onclick="toggleCheck(this)"><input type="checkbox"> <label>Forms handle karo — controlled components</label></div>
+            <div class="topic-item" onclick="toggleCheck(this)"><input type="checkbox"> <label>Event handling — onClick, onChange, onSubmit</label></div>
+          </div>
+        </div>
+      </div>
+      <div class="day-block">
+        <div class="day-label">DAY 33–34 — Fri–Sat</div>
+        <div class="session">
+          <div class="session-header"><span class="session-time">Daily 4h</span><span class="session-type st-practice">💻 Practice</span></div>
+          <div class="topics">
+            <div class="topic-item" onclick="toggleCheck(this)"><input type="checkbox"> <label>React Router DOM — npm install react-router-dom</label></div>
+            <div class="topic-item" onclick="toggleCheck(this)"><input type="checkbox"> <label>BrowserRouter, Routes, Route, Link, useNavigate</label></div>
+            <div class="topic-item" onclick="toggleCheck(this)"><input type="checkbox"> <label>Axios — npm install axios, API calls karo apne backend se</label></div>
+            <div class="topic-item" onclick="toggleCheck(this)"><input type="checkbox"> <label>Loading state, error state handle karo</label></div>
+            <div class="topic-item" onclick="toggleCheck(this)"><input type="checkbox"> <label>Context API — global state — AuthContext banao</label></div>
+          </div>
+        </div>
+      </div>
+      <div class="resource-box">
+        <div class="r-title">// RESOURCES — WEEK 5</div>
+        <div class="resource-item"><span class="ri">▶️</span><div><a href="https://youtube.com/@CodeWithHarry" target="_blank">Code With Harry — React.js</a> <span class="free-badge">FREE</span></div></div>
+        <div class="resource-item"><span class="ri">📄</span><div><a href="https://react.dev" target="_blank">React Official Docs — react.dev</a> <span class="free-badge">FREE</span></div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="week-card" id="week6">
+    <div class="week-header" onclick="toggleWeek('week6')">
+      <div class="wl">
+        <span class="week-num wn-react">WEEK 06</span>
+        React Advanced + Full MERN Connect
+      </div>
+      <div style="display:flex;align-items:center;gap:12px">
+        <span class="week-dates">16 Jun – 22 Jun</span>
+        <span class="toggle-icon">▼</span>
+      </div>
+    </div>
+    <div class="week-body">
+      <div class="day-block">
+        <div class="day-label">DAY 36–37 — Mon–Tue</div>
+        <div class="session">
+          <div class="session-header"><span class="session-time">Daily 4h</span><span class="session-type st-theory">📖 Theory + Practice</span></div>
+          <div class="topics">
+            <div class="topic-item" onclick="toggleCheck(this)"><input type="checkbox"> <label>useRef, useMemo, useCallback — kab use karein</label></div>
+            <div class="topic-item" onclick="toggleCheck(this)"><input type="checkbox"> <label>Custom hooks banao — useFetch, useAuth</label></div>
+            <div class="topic-item" onclick="toggleCheck(this)"><input type="checkbox"> <label>localStorage mein token save karo — login persist karo</label></div>
+            <div class="topic-item" onclick="toggleCheck(this)"><input type="checkbox"> <label>Protected routes — agar login nahi toh redirect karo</label></div>
+          </div>
+        </div>
+      </div>
+      <div class="day-block">
+        <div class="day-label">DAY 38–41 — Wed–Sat</div>
+        <div class="session">
+          <div class="session-header"><span class="session-time">Daily 4h</span><span class="session-type st-project">🛠️ MAIN PROJECT</span></div>
+          <div class="topics">
+            <div class="topic-item" onclick="toggleCheck(this)"><input type="checkbox"> <label>Full MERN App — Expense Tracker ya Blog App</label></div>
+            <div class="topic-item" onclick="toggleCheck(this)"><input type="checkbox"> <label>Frontend: React + Router + Axios + Context</label></div>
+            <div class="topic-item" onclick="toggleCheck(this)"><input type="checkbox"> <label>Backend: Node + Express + MongoDB + JWT</label></div>
+            <div class="topic-item" onclick="toggleCheck(this)"><input type="checkbox"> <label>Features: Register, Login, CRUD operations, Protected routes</label></div>
+            <div class="topic-item" onclick="toggleCheck(this)"><input type="checkbox"> <label>Frontend Vercel pe deploy karo — FREE</label></div>
+            <div class="topic-item" onclick="toggleCheck(this)"><input type="checkbox"> <label>Backend Render pe deploy karo — FREE</label></div>
+            <div class="topic-item" onclick="toggleCheck(this)"><input type="checkbox"> <label>GitHub pe push karo — proper README likho</label></div>
+          </div>
+        </div>
+      </div>
+      <div class="resource-box">
+        <div class="r-title">// DEPLOY RESOURCES</div>
+        <div class="resource-item"><span class="ri">🚀</span><div><a href="https://vercel.com" target="_blank">Vercel — Free Frontend Hosting</a> <span class="free-badge">FREE</span></div></div>
+        <div class="resource-item"><span class="ri">🚀</span><div><a href="https://render.com" target="_blank">Render — Free Backend Hosting</a> <span class="free-badge">FREE</span></div></div>
+        <div class="resource-item"><span class="ri">🐙</span><div><a href="https://github.com" target="_blank">GitHub — Code Host</a> <span class="free-badge">FREE</span></div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== PHASE 5: JOB READY ===== -->
+<div class="phase">
+  <div class="phase-title phase-project">🚀 Phase 5 — Job Ready (Week 7)</div>
+
+  <div class="week-card" id="week7">
+    <div class="week-header" onclick="toggleWeek('week7')">
+      <div class="wl">
+        <span class="week-num wn-project">WEEK 07</span>
+        Portfolio + Resume + Apply!
+      </div>
+      <div style="display:flex;align-items:center;gap:12px">
+        <span class="week-dates">23 Jun – 29 Jun</span>
+        <span class="toggle-icon">▼</span>
+      </div>
+    </div>
+    <div class="week-body">
+      <div class="day-block">
+        <div class="day-label">DAY 43–44 — Mon–Tue</div>
+        <div class="session">
+          <div class="session-header"><span class="session-time">Daily 4h</span><span class="session-type st-project">🛠️ Portfolio</span></div>
+          <div class="topics">
+            <div class="topic-item" onclick="toggleCheck(this)"><input type="checkbox"> <label>Portfolio website banao — HTML/CSS ya React</label></div>
+            <div class="topic-item" onclick="toggleCheck(this)"><input type="checkbox"> <label>Apne 3 projects showcase karo — live links ke saath</label></div>
+            <div class="topic-item" onclick="toggleCheck(this)"><input type="checkbox"> <label>GitHub profile sundar banao — pinned repos, README</label></div>
+          </div>
+        </div>
+      </div>
+      <div class="day-block">
+        <div class="day-label">DAY 45–46 — Wed–Thu</div>
+        <div class="session">
+          <div class="session-header"><span class="session-time">Daily 4h</span><span class="session-type st-theory">📄 Resume + LinkedIn</span></div>
+          <div class="topics">
+            <div class="topic-item" onclick="toggleCheck(this)"><input type="checkbox"> <label>Tech Resume banao — 1 page, ATS friendly</label></div>
+            <div class="topic-item" onclick="toggleCheck(this)"><input type="checkbox"> <label>Skills section — MERN Stack, REST API, JWT, Git</label></div>
+            <div class="topic-item" onclick="toggleCheck(this)"><input type="checkbox"> <label>Projects section — live link + GitHub link dono</label></div>
+            <div class="topic-item" onclick="toggleCheck(this)"><input type="checkbox"> <label>LinkedIn update karo — "Open to Work" lagao</label></div>
+            <div class="topic-item" onclick="toggleCheck(this)"><input type="checkbox"> <label>LinkedIn mein projects add karo screenshots ke saath</label></div>
+          </div>
+        </div>
+      </div>
+      <div class="day-block">
+        <div class="day-label">DAY 47–49 — Fri–Sun</div>
+        <div class="session">
+          <div class="session-header"><span class="session-time">Daily 4h</span><span class="session-type st-practice">💼 Apply + Prep</span></div>
+          <div class="topics">
+            <div class="topic-item" onclick="toggleCheck(this)"><input type="checkbox"> <label>Naukri.com, LinkedIn, Internshala — profile update karo</label></div>
+            <div class="topic-item" onclick="toggleCheck(this)"><input type="checkbox"> <label>Junior Developer / MERN Developer jobs apply karo — 20+ applications</label></div>
+            <div class="topic-item" onclick="toggleCheck(this)"><input type="checkbox"> <label>Interview prep — top 20 Node.js questions practice karo</label></div>
+            <div class="topic-item" onclick="toggleCheck(this)"><input type="checkbox"> <label>Interview prep — top 20 React questions practice karo</label></div>
+            <div class="topic-item" onclick="toggleCheck(this)"><input type="checkbox"> <label>HR questions prepare karo — "Tell me about yourself"</label></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PROJECTS SUMMARY -->
+<div class="week-card" style="margin-bottom:20px">
+  <div class="week-header" onclick="toggleWeek('projects')" style="cursor:pointer">
+    <div class="wl"><span class="week-num wn-project">PROJECTS</span> Tere 3 Projects — Job ke liye</div>
+    <span class="toggle-icon">▼</span>
+  </div>
+  <div class="week-body" id="projects">
+    <div class="project-card">
+      <div class="p-name">1. CLI Task Manager</div>
+      <div class="p-desc">Terminal se tasks add, list, complete aur delete karo. JSON file mein data save hota hai. Node.js pure skills dikhata hai.</div>
+      <div class="p-tech">
+        <span class="p-tag" style="background:#0a2010;color:#4ade80">Node.js</span>
+        <span class="p-tag" style="background:#1a1a00;color:#facc15">File System</span>
+        <span class="p-tag" style="background:#1a1000;color:#fb923c">CLI</span>
+      </div>
+    </div>
+    <div class="project-card">
+      <div class="p-name">2. Auth API (Backend Only)</div>
+      <div class="p-desc">Register, Login, Protected routes. JWT authentication. MongoDB mein users save. Postman se test karo aur Render pe deploy karo.</div>
+      <div class="p-tech">
+        <span class="p-tag" style="background:#0a1530;color:#60a5fa">Express.js</span>
+        <span class="p-tag" style="background:#1f1000;color:#fb923c">MongoDB</span>
+        <span class="p-tag" style="background:#1a0a2a;color:#c084fc">JWT</span>
+        <span class="p-tag" style="background:#1a1010;color:#f87171">bcrypt</span>
+      </div>
+    </div>
+    <div class="project-card">
+      <div class="p-name">3. Full MERN App — Expense Tracker / Blog</div>
+      <div class="p-desc">Complete full stack app. Frontend React pe, Backend Node+Express+MongoDB pe. Login karke apna data dekho. Vercel + Render pe live deploy.</div>
+      <div class="p-tech">
+        <span class="p-tag" style="background:#1f0a15;color:#f472b6">React.js</span>
+        <span class="p-tag" style="background:#0a1530;color:#60a5fa">Express.js</span>
+        <span class="p-tag" style="background:#1f1000;color:#fb923c">MongoDB</span>
+        <span class="p-tag" style="background:#0a2010;color:#4ade80">Node.js</span>
+        <span class="p-tag" style="background:#1a0a2a;color:#c084fc">JWT</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- TIPS -->
+<div class="tips">
+  <h3>⚡ Daily Rules — Tode Mat Kabhi</h3>
+  <div class="tip-item"><span>🔴</span><span>Phone doosre kamre mein rakho padhte waqt — no exceptions</span></div>
+  <div class="tip-item"><span>⏱️</span><span>25 min padhao, 5 min break — Pomodoro technique</span></div>
+  <div class="tip-item"><span>💻</span><span>Sirf video mat dekho — saath mein code karo hamesha</span></div>
+  <div class="tip-item"><span>📝</span><span>Roz ek cheez GitHub pe push karo — choti bhi chalegi</span></div>
+  <div class="tip-item"><span>🚫</span><span>Ek topic mein zyada mat ruko — aage badho, baad mein clear hoga</span></div>
+  <div class="tip-item"><span>🎯</span><span>Subah theory, shaam practice — mix mat karo</span></div>
+</div>
+
+<footer>💪 Bhai — 7 hafta • Roz 4 ghante • Zero excuses → Junior MERN Developer 🚀</footer>
+
+<script>
+  function toggleWeek(id) {
+    const card = document.getElementById(id);
+    card.classList.toggle('open');
+  }
+
+  function toggleCheck(item) {
+    const cb = item.querySelector('input[type="checkbox"]');
+    if (cb) {
+      cb.checked = !cb.checked;
+      item.classList.toggle('checked', cb.checked);
+      updateProgress();
+    }
+  }
+
+  function updateProgress() {
+    const phases = {
+      node: ['week1', 'week2'],
+      express: ['week3'],
+      mongo: ['week4'],
+      react: ['week5', 'week6']
+    };
+
+    Object.entries(phases).forEach(([phase, weeks]) => {
+      let total = 0, checked = 0;
+      weeks.forEach(wk => {
+        const card = document.getElementById(wk);
+        if (card) {
+          const all = card.querySelectorAll('input[type="checkbox"]');
+          const done = card.querySelectorAll('input[type="checkbox"]:checked');
+          total += all.length;
+          checked += done.length;
+        }
+      });
+      const pct = total > 0 ? Math.round((checked / total) * 100) : 0;
+      const bar = document.getElementById(phase + '-bar');
+      const pctEl = document.getElementById(phase + '-pct');
+      if (bar) bar.style.width = pct + '%';
+      if (pctEl) pctEl.textContent = pct + '%';
+    });
+  }
+
+  // Open week1 by default
+  document.getElementById('week1').classList.add('open');
+</script>
+</body>
+</html>
